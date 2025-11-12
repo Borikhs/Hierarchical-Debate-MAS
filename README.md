@@ -26,7 +26,7 @@ A sophisticated multi-agent system using AutoGen that implements hierarchical co
 ## Project Structure
 
 ```
-Hierarchical-Debate-MAS/
+research_src/
 ├── agents/              # (Reserved for custom agents)
 ├── teams/
 │   ├── group_team.py   # GroupTeam class (5 agents)
@@ -57,13 +57,14 @@ Hierarchical-Debate-MAS/
 - Python 3.10+
 - Conda environment (recommended)
 - OpenAI API key
+- SerpAPI API key (for web search functionality)
 
 ### Setup
 
 ```bash
 # Clone the repository
 git clone https://github.com/yourusername/Hierarchical-Debate-MAS.git
-cd Hierarchical-Debate-MAS/
+cd Hierarchical-Debate-MAS/research_src
 
 # Activate conda environment
 conda activate multiagent
@@ -71,8 +72,11 @@ conda activate multiagent
 # Install dependencies
 pip install autogen autogen-agentchat autogen-ext openai python-dotenv
 
-# Create .env file and add your OpenAI API key
-echo "OPENAI_API_KEY=your-api-key-here" > .env
+# Create .env file and add your API keys
+cat > .env << EOF
+OPENAI_API_KEY=your-openai-api-key-here
+SERPAPI_API_KEY=your-serpapi-api-key-here
+EOF
 ```
 
 ## Usage
@@ -306,10 +310,13 @@ system = MultiAgentDebateSystem(log_dir=Path("my_custom_logs"))
 
 ## Troubleshooting
 
-### "OpenAI API key not found"
+### "API key not found"
 ```bash
-# Create or edit .env file in Hierarchical-Debate-MAS directory
-echo "OPENAI_API_KEY=your-key-here" > .env
+# Create or edit .env file in research_src directory
+cat > .env << EOF
+OPENAI_API_KEY=your-openai-api-key-here
+SERPAPI_API_KEY=your-serpapi-api-key-here
+EOF
 ```
 
 ### "Module not found" errors
@@ -380,7 +387,6 @@ logging.basicConfig(level=logging.DEBUG)
 
 ## References
 
-- [Implementation Specification](../implementation_spec.md)
 - [AutoGen Documentation](https://microsoft.github.io/autogen/)
 - [AutoGen AgentChat](https://microsoft.github.io/autogen/dev/user-guide/agentchat-user-guide/index.html)
 
