@@ -120,22 +120,6 @@ from pathlib import Path
 system = MultiAgentDebateSystem(log_dir=Path("my_logs"))
 ```
 
-### Running Examples
-
-```bash
-# Navigate to Hierarchical-Debate-MAS directory
-cd Hierarchical-Debate-MAS
-
-# Run simple test (10th Fibonacci)
-conda run -n multiagent python examples/simple_test.py --test simple
-
-# Run complex test (Fibonacci primes)
-conda run -n multiagent python examples/simple_test.py --test complex
-
-# Or run main.py directly
-conda run -n multiagent python main.py
-```
-
 ## Configuration
 
 Edit `config/settings.py` to customize:
