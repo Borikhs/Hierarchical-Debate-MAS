@@ -60,8 +60,8 @@ Hierarchical-Debate-MAS/
 
 ```bash
 # Clone the repository
-git clone https://github.com/yourusername/Hierarchical-Debate-MAS.git
-cd Hierarchical-Debate-MAS/research_src
+git clone https://github.com/Borikhs/Hierarchical-Debate-MAS.git
+cd Hierarchical-Debate-MAS/
 
 # Activate conda environment
 conda activate multiagent
@@ -249,7 +249,7 @@ By default, the system automatically saves all conversations to timestamped dire
 ### Log Directory Structure
 
 ```
-tmp/transcripts/
+log/transcripts/
 └── 20250110_143022/           # Timestamped session
     ├── session_summary.txt     # Overview of entire session
     ├── phase1_group1.txt       # Group 1 internal discussion
@@ -309,7 +309,7 @@ system = MultiAgentDebateSystem(log_dir=Path("my_custom_logs"))
 
 ### "API key not found"
 ```bash
-# Create or edit .env file in research_src directory
+# Create or edit .env file in Hierarchical-Debate-MAS directory
 cat > .env << EOF
 OPENAI_API_KEY=your-openai-api-key-here
 SERPAPI_API_KEY=your-serpapi-api-key-here
