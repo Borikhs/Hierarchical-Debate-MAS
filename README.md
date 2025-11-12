@@ -6,6 +6,8 @@ A sophisticated multi-agent system using AutoGen that implements hierarchical co
 
 ### Two-Phase Approach
 
+TEST
+
 **Phase 1: Parallel Group Processing**
 - 3 independent groups work simultaneously on the same task
 - Each group has 5 specialized agents:
