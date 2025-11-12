@@ -26,8 +26,7 @@ A sophisticated multi-agent system using AutoGen that implements hierarchical co
 ## Project Structure
 
 ```
-research_src/
-├── agents/              # (Reserved for custom agents)
+Hierarchical-Debate-MAS/
 ├── teams/
 │   ├── group_team.py   # GroupTeam class (5 agents)
 │   └── __init__.py
