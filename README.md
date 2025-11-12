@@ -26,7 +26,7 @@ A sophisticated multi-agent system using AutoGen that implements hierarchical co
 ## Project Structure
 
 ```
-research_src/
+Hierarchical-Debate-MAS/
 ├── agents/              # (Reserved for custom agents)
 ├── teams/
 │   ├── group_team.py   # GroupTeam class (5 agents)
@@ -44,6 +44,8 @@ research_src/
 ├── examples/
 │   └── simple_test.py  # Test examples
 ├── coding/             # Code execution workspace (auto-created)
+├── .log/               # Log files (auto-created)
+├── .env                # Environment variables (create this)
 ├── main.py             # Main system
 └── README.md           # This file
 ```
@@ -59,14 +61,18 @@ research_src/
 ### Setup
 
 ```bash
+# Clone the repository
+git clone https://github.com/yourusername/Hierarchical-Debate-MAS.git
+cd Hierarchical-Debate-MAS/
+
 # Activate conda environment
 conda activate multiagent
 
-# Install dependencies (already done if following the tutorial)
-pip install autogen autogen-agentchat autogen-ext openai
+# Install dependencies
+pip install autogen autogen-agentchat autogen-ext openai python-dotenv
 
-# Set your OpenAI API key
-export OPENAI_API_KEY="your-api-key-here"
+# Create .env file and add your OpenAI API key
+echo "OPENAI_API_KEY=your-api-key-here" > .env
 ```
 
 ## Usage
@@ -117,8 +123,8 @@ system = MultiAgentDebateSystem(log_dir=Path("my_logs"))
 ### Running Examples
 
 ```bash
-# Navigate to research_src directory
-cd /home/hyesung/multi-agent/research_src
+# Navigate to Hierarchical-Debate-MAS directory
+cd Hierarchical-Debate-MAS
 
 # Run simple test (10th Fibonacci)
 conda run -n multiagent python examples/simple_test.py --test simple
@@ -271,87 +277,6 @@ tmp/transcripts/
     └── phase2_leader_debate.json # Leader debate (JSON format)
 ```
 
-### Log File Contents
-
-#### Phase 1 Group Transcripts
-Each group's transcript contains:
-- Complete conversation between all 5 agents
-- Timestamps and metadata
-- Stop reason and message count
-- Full agent messages in order
-
-Example: `phase1_group1.txt`
-```
-================================================================================
-PHASE 1: Group1 Internal Discussion
-================================================================================
-Saved: 2025-01-10 14:30:22
-
-Metadata:
-  stop_reason: Text 'REPORT_READY' mentioned
-  message_count: 12
-
-================================================================================
-
-[Message 1] Group1Leader
---------------------------------------------------------------------------------
-Let's solve this step by step. CodeWriter, please write code to calculate...
-
-[Message 2] Group1CodeWriter
---------------------------------------------------------------------------------
-Here's the code to solve this:
-```python
-def fibonacci(n):
-    ...
-```
-
-[Message 3] Group1CodeExecutor
---------------------------------------------------------------------------------
-Exit code: 0
-Output:
-The 10th Fibonacci number is: 55
-...
-```
-
-#### Phase 2 Debate Transcript
-The debate transcript contains:
-- All messages between the 3 leaders and consensus manager
-- Final consensus section
-- Metadata about debate outcome
-
-Example: `phase2_leader_debate.txt`
-```
-================================================================================
-PHASE 2: Leader Debate & Consensus
-================================================================================
-...
-
-[Message 1] Group1Leader
---------------------------------------------------------------------------------
-Our group used a recursive approach and found the answer to be 55.
-
-[Message 2] Group2Leader
---------------------------------------------------------------------------------
-We used an iterative method and also got 55.
-
-[Message 3] ConsensusManager
---------------------------------------------------------------------------------
-All three groups agree. The answer is 55.
-CONSENSUS_REACHED
-
-================================================================================
-FINAL CONSENSUS
-================================================================================
-The 10th Fibonacci number is 55, confirmed by all three independent groups.
-```
-
-#### Session Summary
-The summary file provides a high-level overview:
-- Original task
-- Brief summary of each group's report
-- Consensus status
-- Links to detailed transcripts
-
 ### Accessing Logs
 
 ```python
@@ -399,15 +324,16 @@ system = MultiAgentDebateSystem(log_dir=Path("my_custom_logs"))
 
 ### "OpenAI API key not found"
 ```bash
-export OPENAI_API_KEY="your-key-here"
-# Or create a .env file with: OPENAI_API_KEY=your-key-here
+# Create or edit .env file in Hierarchical-Debate-MAS directory
+echo "OPENAI_API_KEY=your-key-here" > .env
 ```
 
 ### "Module not found" errors
 ```bash
 # Make sure you're in the right directory and environment
-cd /home/hyesung/multi-agent/research_src
 conda activate multiagent
+# Reinstall dependencies if needed
+pip install autogen autogen-agentchat autogen-ext openai python-dotenv
 ```
 
 ### Code execution fails
