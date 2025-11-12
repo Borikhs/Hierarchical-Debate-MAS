@@ -41,8 +41,6 @@ research_src/
 ├── config/
 │   ├── settings.py     # Configuration
 │   └── __init__.py
-├── examples/
-│   └── simple_test.py  # Test examples
 ├── coding/             # Code execution workspace (auto-created)
 ├── .log/               # Log files (auto-created)
 ├── .env                # Environment variables (create this)
