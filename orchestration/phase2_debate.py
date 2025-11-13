@@ -27,7 +27,7 @@ class Phase2DebateOrchestrator:
     """
     Orchestrates Phase 2: Leader debate and consensus building.
 
-    After Phase 1, the 3 group leaders:
+    After Phase 1, the N group leaders:
     - Present their group's findings
     - Debate different approaches
     - Reach consensus on the final answer
@@ -92,7 +92,7 @@ ORIGINAL TASK:
 {'-'*60}
 
 Your responsibilities:
-1. Listen to all 3 group leaders present their findings about THE ORIGINAL TASK ABOVE
+1. Listen to all N group leaders present their findings about THE ORIGINAL TASK ABOVE
 2. Identify areas of agreement and disagreement
 3. Guide the discussion towards consensus ON THE ORIGINAL TASK
 4. Synthesize the final answer when consensus emerges
@@ -140,7 +140,7 @@ Select from: {participants}
         Run the leader debate to reach consensus.
 
         Args:
-            group_reports: Reports from Phase 1 (3 groups)
+            group_reports: Reports from Phase 1 
             original_task: The original task that groups worked on
 
         Returns:
@@ -171,20 +171,29 @@ Select from: {participants}
         )
 
         # Prepare initial task for debate with clear task statement
-        initial_prompt = f"""Welcome to the multi-group consensus debate.
+        num_groups = len(leaders)
+
+        initial_prompt = f"""
+Welcome to the multi-group consensus debate.
 
 ORIGINAL TASK:
 {'-'*60}
 {original_task}
 {'-'*60}
 
-Three groups have independently worked on this task.
-Each group leader will now present their findings on THE TASK ABOVE.
+A total of {num_groups} groups have independently worked on this task.
+The following {num_groups} group leaders will now present their findings:
 
-After presentations, discuss and reach consensus on the final answer to THE ORIGINAL TASK.
+{', '.join([leader.name for leader in leaders])}
 
-Group leaders, please present your solutions to the task.
-"""
+Rules:
+1. Each leader must present their findings exactly once during the presentation phase.
+2. Do NOT introduce new leaders. Only the above leaders exist.
+3. After all leaders have presented, you will discuss and work toward consensus.
+
+Leaders, please begin by presenting your solutions one by one.
+        """
+
 
         # Run debate
         print("Starting debate...\n")
