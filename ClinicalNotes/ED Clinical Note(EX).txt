@@ -1,0 +1,35 @@
+=== ED Clinical Note ===
+
+[PATIENT INFO]
+ID: ED20250112001 | Age: 67M | Arrival: 14:35 via ambulance
+
+[TRIAGE]
+CC: Chest pain and shortness of breath
+ESI: Level 2
+VS: BP 165/95, HR 108, RR 24, T 37.2°C, SpO2 91%, Pain 8/10
+
+[HISTORY]
+PMHx: HTN, HLD, DM2
+Meds: Metformin, Lisinopril, Atorvastatin
+Allergies: Penicillin
+
+[PRESENTATION]
+67yo M with HTN/HLD/DM2 presents with acute onset substernal chest pressure (8/10), radiating to left arm, started 2h ago while climbing stairs. Associated with dyspnea, nausea, and diaphoresis.
+
+[PHYSICAL EXAM]
+Gen: Anxious, moderate distress
+CV: Tachycardic, regular, no murmurs
+Resp: Tachypneic, clear bilaterally
+
+[ED COURSE]
+Labs: Troponin 0.8 (elevated), BNP 450
+ECG: ST depression V4-V6
+Rx: ASA 325mg, NTG x2, Morphine 4mg IV, O2 2L
+Response: Pain improved 8→4/10, VS stabilized
+
+[DIAGNOSIS]
+NSTEMI
+
+[DISPOSITION]
+→ ADMIT to CCU
+Reason: High-risk NSTEMI requiring telemetry and cardiology evaluation

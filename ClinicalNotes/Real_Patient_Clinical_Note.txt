@@ -1,0 +1,54 @@
+=== ED Clinical Note ===
+
+[PATIENT INFO]
+ID: R-1731-00000001 | Age: 78F | Arrival: 13:45 via 본원응급실(AER)
+
+[TRIAGE]
+CC: 어깨 통증 및 전신 근육통
+ESI: Level 1
+VS: 활력징후 기록 참조
+
+[HISTORY]
+PMHx: Parkinson's disease
+Past injuries: Multiple fracture of ribs (old)
+Meds: 파킨슨병 관련 약물 복용 중
+Allergies: 알러지 확인 필요
+
+[PRESENTATION]
+78yo F with history of Parkinson's disease and old multiple rib fractures presents to ED with shoulder pain and generalized myalgia. Patient arrived from 원내 (in-hospital) emergency service.
+
+[PHYSICAL EXAM]
+Gen: ESI Level 1 상태로 응급실 도착
+MSK: Shoulder examination reveals impingement signs
+Neuro: Parkinson's disease의 기존 신경학적 소견
+Back: Radiculopathy 관련 신경학적 검진 소견
+
+[ED COURSE]
+Initial assessment performed for high-priority patient (ESI Level 1).
+
+Physical examination focused on:
+- Shoulder joint: Impingement syndrome
+- Musculoskeletal: Generalized myalgia
+- Neurologic: Radiculopathy symptoms
+
+Imaging: 영상검사 시행 여부 확인 필요
+Labs: 기본 검사 시행 여부 확인 필요
+
+[DIAGNOSIS]
+Primary Diagnosis:
+  - Impingement syndrome of shoulder (M754)
+
+Secondary Diagnoses:
+  - Parkinson's disease (G20)
+  - Myalgia (M79180)
+  - Radiculopathy (M5410)
+  - Multiple fracture of ribs (S22440) - old injury
+
+[DISPOSITION]
+→ 정상퇴실 (Normal discharge)
+
+Reason: 증상 평가 완료 후 외래 추적 관찰 권유
+        보존적 치료 및 통증 관리 교육 제공
+        파킨슨병 관련 기존 치료 지속 안내
+
+

@@ -1,0 +1,53 @@
+=== ED Clinical Note ===
+
+[PATIENT INFO]
+ID: R-1731-00000001-2018-01-20-1345
+Age: 77F | Arrival: 13:45
+Entry: 도보 | EMS: No
+
+[TRIAGE]
+CC: Bruise
+KTAS Level: 5
+Onset: 2018-01-19 13:49:00
+VS: BP 150/81, HR 89, RR 18, T 36.5°C, SpO2 96%
+AVPU: Alert
+
+[INITIAL NURSING ASSESSMENT]
+Time: 2018-01-20 13:51:24
+Note: 시술부위 통증과 부종, bruise 로 내원함 
+
+[PRESENTATION]
+77yo F presents to ED with Bruise.
+Onset: 2018-01-19 13:49:00
+Injury: 없음
+
+[PHYSICAL EXAM]
+Gen: Alert
+Vital signs: BP 150/81, HR 89, RR 18, T 36.5°C, SpO2 96%
+
+[ED COURSE]
+Initial nursing assessment completed at 2018-01-20 13:51:24.
+Patient evaluated for chief complaint of Bruise.
+
+Procedures/Interventions:
+- Intubation: No
+- Ventilator: No
+- Vasopressor: No
+
+[DIAGNOSIS]
+Primary Diagnosis:
+  M754 - Impingement syndrome of shoulder
+
+Secondary Diagnoses:
+  G20
+  S22440
+  M79180
+  M5410
+
+[DISPOSITION]
+Discharge Time: 2018-01-20 14:24:23
+ER Result Code: 11
+
+==================================================
+
+Note: 본 Clinical Note는 snuh_20180103_base.xlsx의 환자 데이터를 기반으로 작성되었습니다.

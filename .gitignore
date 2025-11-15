@@ -145,6 +145,7 @@ venv/
 ENV/
 env.bak/
 venv.bak/
+MULTI_AGENT_EME/
 
 # Spyder project settings
 .spyderproject
@@ -207,3 +208,32 @@ cython_debug/
 marimo/_static/
 marimo/_lsp/
 __marimo__/
+
+# Project-specific
+# Data files (excluded from repository)
+Data/
+Data/**
+
+# Analysis test files (excluded from repository)
+analysis_test/
+analysis_test/**
+
+# Claude settings (excluded from repository)
+.claude/
+.claude/**
+
+# Output and temporary files
+output.txt
+*.tmp
+*.bak
+*.swp
+*~
+
+# Large data files (uncomment if you don't want to track data files)
+# *.xlsx
+# *.xls
+# *.csv
+
+# Log files
+*.log
+logs/
