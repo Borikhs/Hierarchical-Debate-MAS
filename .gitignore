@@ -237,3 +237,4 @@ output.txt
 # Log files
 *.log
 logs/
+open-api key.txt
