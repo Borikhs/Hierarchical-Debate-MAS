@@ -1,0 +1,38 @@
+Primary Consultation
+
+[기본 정보(Basic Information)]
+67세 남성 환자로, 14:35 구급차를 통해 응급실에 도착하였다.
+
+[임상 증상(Clinical Presentation)]
+환자는 2시간 전 계단을 오르던 중 갑작스럽게 발생한 **흉골 하부의 압박감(통증 8/10)**을 주소로 응급실에 왔다. 통증은 좌측 팔로 방사되었으며, 호흡곤란, 오심, 발한이 동반되었다.
+내원 당시 활력징후는 BP 165/95 mmHg, HR 108 bpm, RR 24/min, 체온 37.2°C, SpO₂ 91%였으며, 초기 통증은 8/10이었다.
+트리아지 단계에서 ESI Level 2로 분류되었다.
+
+[신체 진찰(Physical Examination)]
+환자는 불안해 보이며 중등도 불편감을 호소하였다.
+심혈관계 진찰에서 빈맥이 있으나 규칙적인 리듬을 보였고, 잡음은 들리지 않았다.
+호흡기 진찰에서는 빠른 호흡이 관찰되었으나 양측 폐음은 깨끗하였다.
+
+[관련 의학적 병력(Related Medical History)]
+고혈압, 고지혈증, 제2형 당뇨의 과거력이 있다.
+현재 Metformin, Lisinopril, Atorvastatin을 복용 중이며, Penicillin 알레르기가 있다.
+
+[초기 검사 결과(Initial Lab Results)]
+
+혈액검사에서 Troponin 0.8 ng/mL로 상승, BNP 450 pg/mL로 확인되었다.
+심전도에서는 **V4–V6에서 ST 분절 하강(ST depression)**이 관찰되었다.
+
+[관리(agent) 지시사항(Admin Agent)]
+
+위의 정보는 응급실 첫 진료 단계에서 얻어진 초기 평가입니다.
+
+[응급실 경과(ED Course)]
+Aspirin 325 mg, Nitroglycerin 2회, Morphine 4 mg IV, 산소 2L 투여 후
+통증은 8 → 4점으로 호전되었고 활력징후도 안정되었다.
+
+[최종 진단(Diagnosis)]
+비ST분절 심근경색(NSTEMI)
+
+[배치(Disposition)]
+중환자 심장계(CCU)로 입원
+사유: 고위험 NSTEMI로 판단되며 심장내과 집중 모니터링 및 치료 필요
