@@ -11,10 +11,12 @@ from pathlib import Path
 from typing import Optional
 
 from autogen_ext.models.openai import OpenAIChatCompletionClient
+from autogen_ext.models.ollama import OllamaChatCompletionClient
 
 from orchestration import Phase1Orchestrator, Phase2DebateOrchestrator
 from config import MODEL_NAME, API_KEY, CODING_DIR
 from utils import TranscriptLogger
+from tools import RetrievalSystem
 
 
 class MultiAgentDebateSystem:
@@ -32,7 +34,10 @@ class MultiAgentDebateSystem:
         api_key: Optional[str] = None,
         work_dir: Path = CODING_DIR,
         enable_logging: bool = True,
-        log_dir: Optional[Path] = None
+        log_dir: Optional[Path] = None,
+        retriever_name: str = "MedCPT",
+        corpus_name: str = "MedCorp",
+        db_dir: str = "/data/multi-agent_snuh/MedRAG/corpus"
     ):
         """
         Initialize the debate system.
@@ -43,6 +48,9 @@ class MultiAgentDebateSystem:
             work_dir: Working directory for code execution
             enable_logging: Whether to save transcripts to files
             log_dir: Directory for logs (default: tmp/transcripts)
+            retriever_name: MedRAG retriever (MedCPT, BM25, Contriever, etc.)
+            corpus_name: Corpus to use (Textbooks, PubMed, StatPearls, etc.)
+            db_dir: Path to MedRAG corpus directory
         """
         # Setup API key
         if api_key:
@@ -62,6 +70,30 @@ class MultiAgentDebateSystem:
             api_key=self.api_key
         )
 
+        # self.model_client = OllamaChatCompletionClient(
+        # model="llama3.3",
+        # model_info={
+        #    "vision": False,
+        #    "function_calling": True,
+        #    "json_output": True,
+        #    "family" : 'unknown'
+        # })
+
+        # Initialize MedRAG retrieval system (shared across all groups)
+        print(f"[MedRAG] Initializing retrieval system...")
+        print(f"[MedRAG] Retriever: {retriever_name}, Corpus: {corpus_name}")
+        print(f"[MedRAG] Database directory: {db_dir}")
+
+        self.retrieval_system = RetrievalSystem(
+            retriever_name=retriever_name,
+            corpus_name=corpus_name,
+            db_dir=db_dir,
+            HNSW=False,  # Use exact search (more accurate)
+            cache=True  # Don't cache in memory (save RAM)
+        )
+
+        print(f"[MedRAG] Retrieval system ready!\n")
+
         # Create transcript logger
         self.logger = None
         if enable_logging:
@@ -69,11 +101,12 @@ class MultiAgentDebateSystem:
             print(f"[LOG] Transcript logging enabled")
             print(f"[LOG] Session directory: {self.logger.get_session_dir()}\n")
 
-        # Create orchestrators
+        # Create orchestrators (pass retrieval system to Phase1)
         self.phase1 = Phase1Orchestrator(
             model_client=self.model_client,
             work_dir=work_dir,
-            logger=self.logger
+            logger=self.logger,
+            retrieval_system=self.retrieval_system
         )
 
         self.phase2 = Phase2DebateOrchestrator(
@@ -139,10 +172,47 @@ async def main():
     """Example usage of the multi-agent debate system."""
 
     task ="""
-    Question:
-    Detailed analysis of sputum and systemic inflammation in asthma phenotypes: are paucigranulocytic asthmatics really non-inflammatory?
+    Using the patient information below, independently predict the patient's Diagnosis and Disposition.
     
-    Answer with one of: "yes", "no", or "maybe".
+Patient's information:
+[Basic Information]
+- **Age**: 78 years old
+- **Gender**: Female
+- **Arrival Time**: Admitted at 13:45
+- **Arrival Method**: Brought directly to our Emergency Department (AER)
+
+[Clinical Presentation]
+- **Chief Complaint**: Patient presented with severe shoulder pain characterized by significant limitation in shoulder movement, particularly exacerbated by arm elevation, accompanied by multiple rib fractures and generalized muscle aches.
+- **Reason for Visit**: Acute onset symptoms following a fall suspected to have resulted in multiple rib fractures and exacerbated pre-existing conditions including shoulder impingement syndrome and radiculopathy.
+- **Vital Signs**:
+  - **Temperature**: 36.5°C
+  - **Respiratory Rate**: 18 breaths per minute
+  - **Heart Rate**: 89 beats per minute
+- **ESI Level**: ESI Level 1 (Non-critical)
+
+[Physical Examination]
+- **General**: Alert and oriented, mildly diaphoretic due to pain.
+- **Musculoskeletal**: 
+  - Significant tenderness over the affected shoulder area indicative of impingement syndrome (S22440).
+  - Multiple tender points noted across the rib cage consistent with multiple rib fractures (M79180).
+  - Generalized myalgia (M754) observed throughout the musculature.
+- **Neurological**: Mild discomfort reported in the upper extremity suggestive of radiculopathy (M5410), potentially involving multiple spinal levels.
+
+[Medical History]
+- **Past Medical History**: 
+  - Parkinson’s Disease (G20)
+  - History of multiple minor falls increasing the risk for fractures
+- **Current Medications**: Information not provided
+- **Allergies**: Information not provided
+
+[Initial Lab Results]
+- **Summary of Diagnostic Tests**: No specific lab results, imaging, or functional tests noted at this time.
+
+[Initial Assessment and Plan]
+- **Medications and Treatments Administered**: 
+  - Administration of analgesics (e.g., NSAIDs or acetaminophen) for pain management.
+  - Referral planned for further imaging (e.g., X-rays) to confirm rib fractures and assess spinal involvement.
+  - Consideration for orthopedic consultation for comprehensive evaluation and potential management of shoulder impingement syndrome and radiculopathy.
     """
 
     # Create system

@@ -11,6 +11,7 @@ from autogen_ext.models.openai import OpenAIChatCompletionClient
 from teams import GroupTeam
 from config import GROUP_NAMES, CODING_DIR
 from utils import TranscriptLogger
+from tools import RetrievalSystem
 
 
 @dataclass
@@ -36,18 +37,21 @@ class Phase1Orchestrator:
         self,
         model_client: OpenAIChatCompletionClient,
         work_dir: Path = CODING_DIR,
-        logger: Optional[TranscriptLogger] = None
+        logger: Optional[TranscriptLogger] = None,
+        retrieval_system: Optional[RetrievalSystem] = None
     ):
         self.model_client = model_client
         self.work_dir = work_dir
         self.logger = logger
+        self.retrieval_system = retrieval_system
 
-        # Create 3 identical groups
+        # Create 3 identical groups (pass retrieval system to each)
         self.groups = [
             GroupTeam(
                 group_name=name,
                 model_client=model_client,
-                work_dir=work_dir
+                work_dir=work_dir,
+                retrieval_system=retrieval_system
             )
             for name in GROUP_NAMES
         ]

@@ -11,7 +11,7 @@ from autogen_agentchat.conditions import TextMentionTermination, MaxMessageTermi
 from autogen_ext.models.openai import OpenAIChatCompletionClient
 import re
 
-from tools import web_search_tool
+from tools import web_search_tool, create_medrag_search_tool, RetrievalSystem
 from config import (
     REPORT_READY_KEYWORD,
     MAX_GROUP_MESSAGES,
@@ -34,14 +34,28 @@ class GroupTeam:
         self,
         group_name: str,
         model_client: OpenAIChatCompletionClient,
-        work_dir: Path
+        work_dir: Path,
+        retrieval_system: Optional[RetrievalSystem] = None
     ):
         self.group_name = group_name
         self.model_client = model_client
+        self.retrieval_system = retrieval_system
 
         # Create isolated work directory for this group
         self.group_work_dir = work_dir / group_name.lower()
         self.group_work_dir.mkdir(parents=True, exist_ok=True)
+
+        # Create MedRAG search tool with shared retrieval system
+        if self.retrieval_system is not None:
+            self.medrag_search_tool = create_medrag_search_tool(self.retrieval_system)
+        else:
+            # If no retrieval system provided, create a dummy tool that returns an error
+            def medrag_search_tool_dummy(
+                query: Annotated[str, "Medical question or query"],
+                k: Annotated[int, "Number of documents"] = 5
+            ) -> Annotated[str, "Error message"]:
+                return "Error: MedRAG retrieval system not initialized"
+            self.medrag_search_tool = medrag_search_tool_dummy
 
         # Initialize agents
         self._create_agents()
@@ -177,24 +191,38 @@ Extract the code and call: execute_python_code(code='print("hello")')
 Then report the results."""
         )
 
-        # 4. Web Researcher: Searches for information
+        # 4. Medical Researcher: Searches for medical information using MedRAG
         self.researcher = AssistantAgent(
             name=f"{self.group_name}Researcher",
-            description="Searches for information using web tools",
+            description="Searches for medical information using MedRAG and web tools",
             model_client=self.model_client,
-            tools=[web_search_tool],
-            system_message="""You are a research specialist.
+            tools=[self.medrag_search_tool, web_search_tool],
+            system_message="""You are a medical research specialist with access to two research tools.
 
 Your role:
-1. Search for relevant information using the web_search_tool
-2. Gather context and background information
-3. Find facts, definitions, and explanations
-4. Summarize findings clearly and cite sources
+1. Search for relevant medical information using MedRAG (medrag_search_tool)
+2. Use web search (web_search_tool) for supplementary or non-medical information
+3. Gather context and background information from medical literature
+4. Find facts, definitions, and explanations from trusted medical sources
+5. Summarize findings clearly and cite sources
 
-When asked to research:
-- Use web_search_tool(query="your search query")
+Research Strategy:
+- **ALWAYS use medrag_search_tool FIRST** for medical/clinical questions
+  - MedRAG provides access to medical textbooks, clinical guidelines, and literature
+  - Best for: disease information, treatments, medical definitions, clinical facts
+  - Example: medrag_search_tool(query="What is the pathophysiology of asthma?", k=5)
+
+- Use web_search_tool for:
+  - Supplementary information not found in MedRAG
+  - Current events or very recent information
+  - Non-medical background information
+  - Example: web_search_tool(query="latest asthma research 2024")
+
+Output Guidelines:
 - Provide concise, relevant summaries
-- Highlight key information that helps solve the task
+- Highlight key medical information that helps solve the task
+- Cite the source (textbook name, document ID) when available
+- If MedRAG doesn't have sufficient info, mention this and use web search as backup
 """
         )
 
