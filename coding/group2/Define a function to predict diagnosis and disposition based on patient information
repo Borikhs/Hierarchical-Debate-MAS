@@ -1,0 +1,47 @@
+# Define a function to predict diagnosis and disposition based on patient information
+def predict_diagnosis_and_disposition(age, gender, symptoms, medical_history, vital_signs, esi_level, physical_exam):
+    # Initialize empty dictionary to store predictions
+    predictions = {
+        "Diagnosis": "",
+        "Disposition": ""
+    }
+    
+    # Analyze symptoms and medical history for probable diagnosis
+    if "rib fractures" in symptoms and "shoulder impingement" in symptoms:
+        predictions["Diagnosis"] = "Rib Fractures with Shoulder Impingement and Radiculopathy"
+    if "Parkinson’s Disease" in medical_history:
+        predictions["Diagnosis"] += ", Exacerbation of Parkinson's Symptoms likely"
+    
+    # Determine disposition based on ESI level and clinical presentation
+    if esi_level == "ESI Level 1":
+        predictions["Disposition"] = "Admission for monitoring and pain management"
+
+    # Check vital signs for immediate concerns
+    if vital_signs.get("Temperature", 36.5) >= 38.0:
+        predictions["Disposition"] += " with focus on Infection Control"
+        
+    # Adjust for any additional observations from the physical exam
+    if "mild discomfort" in physical_exam.get("Neurological", ""):
+        predictions["Disposition"] += " and neurological monitoring"
+
+    return predictions
+
+# Patient data based on the provided information
+age = 78
+gender = "Female"
+symptoms = ["severe shoulder pain", "multiple rib fractures", "generalized muscle aches"]
+medical_history = ["Parkinson’s Disease", "History of multiple minor falls"]
+vital_signs = {"Temperature": 36.5, "Respiratory Rate": 18, "Heart Rate": 89}
+esi_level = "ESI Level 1"
+physical_exam = {
+    "General": "Alert, oriented, mildly diaphoretic due to pain",
+    "Musculoskeletal": "Tenderness over shoulder area, multiple tender points on rib cage",
+    "Neurological": "Mild discomfort in upper extremity"
+}
+
+# Invoke the function with the patient data
+result = predict_diagnosis_and_disposition(age, gender, symptoms, medical_history, vital_signs, esi_level, physical_exam)
+
+# Print the predicted diagnosis and disposition
+print(f"Predicted Diagnosis: {result['Diagnosis']}")
+print(f"Predicted Disposition: {result['Disposition']}")
