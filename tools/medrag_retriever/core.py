@@ -126,9 +126,9 @@ def construct_index(index_dir, model_name, h_dim=768, HNSW=False, M=32):
     return index
 
 
-class Retriever: 
+class Retriever:
 
-    def __init__(self, retriever_name="ncbi/MedCPT-Query-Encoder", corpus_name="textbooks", db_dir="./corpus", HNSW=False, **kwarg):
+    def __init__(self, retriever_name="ncbi/MedCPT-Query-Encoder", corpus_name="textbooks", db_dir="./corpus", HNSW=False, embedding_function=None, **kwarg):
         self.retriever_name = retriever_name
         self.corpus_name = corpus_name
 
@@ -200,12 +200,17 @@ class Retriever:
                 print("[In progress] Embedding finished! The dimension of the embeddings is {:d}.".format(h_dim))
                 self.index = construct_index(index_dir=self.index_dir, model_name=self.retriever_name.replace("Query-Encoder", "Article-Encoder"), h_dim=h_dim, HNSW=HNSW)
                 print("[Finished] Corpus indexing finished!")
-                self.metadatas = [json.loads(line) for line in open(os.path.join(self.index_dir, "metadatas.jsonl")).read().strip().split('\n')]            
-            if "contriever" in self.retriever_name.lower():
-                self.embedding_function = SentenceTransformer(self.retriever_name, device="cuda" if torch.cuda.is_available() else "cpu")
+                self.metadatas = [json.loads(line) for line in open(os.path.join(self.index_dir, "metadatas.jsonl")).read().strip().split('\n')]
+
+            # Use shared embedding function if provided, otherwise create new one
+            if embedding_function is not None:
+                self.embedding_function = embedding_function
             else:
-                self.embedding_function = CustomizeSentenceTransformer(self.retriever_name, device="cuda" if torch.cuda.is_available() else "cpu")
-            self.embedding_function.eval()
+                if "contriever" in self.retriever_name.lower():
+                    self.embedding_function = SentenceTransformer(self.retriever_name, device="cuda" if torch.cuda.is_available() else "cpu")
+                else:
+                    self.embedding_function = CustomizeSentenceTransformer(self.retriever_name, device="cuda" if torch.cuda.is_available() else "cpu")
+                self.embedding_function.eval()
 
     def get_relevant_documents(self, question, k=32, id_only=False, **kwarg):
         assert type(question) == str
@@ -260,11 +265,27 @@ class RetrievalSystem:
         self.corpus_name = corpus_name
         assert self.corpus_name in corpus_names
         assert self.retriever_name in retriever_names
+
+        # Create shared embedding functions (one per retriever type)
+        # This prevents loading the same model multiple times for different corpora
+        self.embedding_functions = {}
+        for retriever in retriever_names[self.retriever_name]:
+            if "bm25" not in retriever.lower():
+                print(f"[MedRAG] Loading shared embedding model for '{retriever}'...")
+                if "contriever" in retriever.lower():
+                    self.embedding_functions[retriever] = SentenceTransformer(retriever, device="cuda" if torch.cuda.is_available() else "cpu")
+                else:
+                    self.embedding_functions[retriever] = CustomizeSentenceTransformer(retriever, device="cuda" if torch.cuda.is_available() else "cpu")
+                self.embedding_functions[retriever].eval()
+
+        # Create retrievers and share embedding functions
         self.retrievers = []
         for retriever in retriever_names[self.retriever_name]:
             self.retrievers.append([])
+            embedding_func = self.embedding_functions.get(retriever, None)
             for corpus in corpus_names[self.corpus_name]:
-                self.retrievers[-1].append(Retriever(retriever, corpus, db_dir, HNSW=HNSW))
+                self.retrievers[-1].append(Retriever(retriever, corpus, db_dir, HNSW=HNSW, embedding_function=embedding_func))
+
         self.cache = cache
         if self.cache:
             self.docExt = DocExtracter(cache=True, corpus_name=self.corpus_name, db_dir=db_dir)
