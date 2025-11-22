@@ -1,0 +1,13 @@
+[Initial Record Clinical Note(Correct)]
+
+[Diagnosis]
+- Primary Diagnosis: Impingement Syndrome of Shoulder (S22440)
+- Secondary Diagnoses:
+  - Multiple Rib Fractures (M79180)
+  - Myalgia (M754)
+  - Radiculopathy (M5410)
+
+[Disposition]
+- Discharge Information: The patient was discharged in stable condition after receiving appropriate pain management and referred for follow-up orthopedic evaluation. Rationale: Improvement noted in symptoms, particularly concerning the shoulder impingement syndrome, with plans for further management of rib fractures and radiculopathy outside the emergency setting.
+
+---

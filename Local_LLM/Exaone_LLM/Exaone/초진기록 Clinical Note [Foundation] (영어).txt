@@ -1,0 +1,36 @@
+Clinical Note
+
+[Basic Information]
+- Age: 78 years old
+- Gender: Female
+- Arrival Time: Admitted at 13:45
+- Arrival Method: Brought directly to our Emergency Department (AER)
+
+[Clinical Presentation]
+- Chief Complaint: The patient presented with complaints of severe shoulder pain associated with difficulty in shoulder movement, exacerbated by activities involving arm elevation, alongside multiple rib fractures and generalized muscle aches.
+- Reason for Visit: Due to acute onset of symptoms following a fall, likely resulting in multiple rib fractures and aggravation of pre-existing conditions including shoulder impingement syndrome and radiculopathy.
+- Vital Signs: 
+  - Temperature: 36.5°C
+  - Respiratory Rate: 18 breaths per minute
+  - Heart Rate: 89 beats per minute
+- ESI Level: ESI Level 1 (Non-critical)
+
+[Physical Examination]
+- General: Alert and oriented, mildly diaphoretic due to pain.
+- Musculoskeletal: Significant tenderness over the affected shoulder area with limitation of range of motion suggestive of impingement syndrome (S22440). Multiple areas of tenderness noted over the rib cage consistent with multiple rib fractures (M79180). Generalized myalgia (M754) noted throughout the musculature.
+- Neurological: Mild discomfort reported in the upper extremity corresponding to radiculopathy (M5410), likely involving multiple spinal levels.
+
+[Related Medical History]
+- Past Medical History: 
+  - Parkinson’s Disease (G20)
+  - History of multiple minor falls increasing risk for fractures
+- Current Medications: Information not provided
+- Allergies: Information not provided
+
+[Initial Lab Results]
+- Summary of Diagnostic Tests: No specific lab results, imaging, or functional tests noted in the provided data.
+
+[ED Course]
+- Medications and Treatments Administered: 
+  - Analgesics (e.g., NSAIDs or acetaminophen) for pain management
+  - Possible referral for further imaging or orthopedic consultation as needed for rib fractures and radiculopathy management

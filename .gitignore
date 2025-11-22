@@ -237,4 +237,8 @@ output.txt
 # Log files
 *.log
 logs/
+
+# Zip files (excluded from repository)
+*.zip
+Local_LLM/Exaone_LLM.zip
 open-api key.txt

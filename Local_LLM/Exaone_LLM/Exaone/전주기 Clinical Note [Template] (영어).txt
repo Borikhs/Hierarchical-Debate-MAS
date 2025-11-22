@@ -1,0 +1,93 @@
+[Full Cycle Clinical Note]
+
+This note provides a comprehensive record of the patient's entire emergency department visit from arrival to discharge.
+
+[Basic Information]
+- Patient ID: [Patient Identification Number]
+- Age: [Age] years old
+- Gender: [Gender] (M/F)
+- Arrival Time: [YYYY-MM-DD HH:MM]
+- Arrival Method: [Detailed arrival route]
+- ESI Level: [Emergency severity level]
+
+[Clinical Presentation]
+- Chief Complaint: [Detailed description of patient's main complaints]
+- Reason for Visit: [Circumstances and background of symptom onset]
+- Vital Signs (All measurements):
+  - Temperature: [°C]
+  - Respiratory Rate: [breaths per minute]
+  - Heart Rate: [beats per minute]
+  - Blood Pressure: [systolic/diastolic mmHg]
+  - Oxygen Saturation: [%]
+  - [All other measured vital signs]
+- ESI Level: [Level] ([Level description])
+
+[Physical Examination]
+- General Status: [Consciousness level, general condition assessment]
+- Neurological Examination: [Detailed neurological findings]
+- Musculoskeletal: [Joint, muscle, bone findings]
+- Chest: [Breath sounds, heart sounds, chest tenderness, etc.]
+- Abdomen: [Tenderness, bowel sounds, mass palpation, etc.]
+- Skin: [Rash, injury, abnormal findings]
+- Other Relevant Body Parts: [Notable findings]
+
+[Related Medical History]
+- Past Medical Diagnoses (All diagnoses):
+  - [Diagnosis 1] (ICD code)
+  - [Diagnosis 2] (ICD code)
+  - [Diagnosis 3] (ICD code)
+  - [List all past diagnoses]
+- Current Medications:
+  - [Medication 1]: [Dose, frequency]
+  - [Medication 2]: [Dose, frequency]
+  - [List all medications]
+- Allergy Information: [Allergens and reactions]
+
+[Initial Lab Results]
+- Diagnostic Tests (All test results):
+  - [Test 1]: [Value] [Unit] (Reference range: [Range])
+  - [Test 2]: [Value] [Unit] (Reference range: [Range])
+  - [Document all diagnostic test results in detail]
+
+- Imaging Studies:
+  - [Study Type 1] ([Body part]): [Detailed findings]
+  - [Study Type 2] ([Body part]): [Detailed findings]
+  - [Document all imaging study results]
+
+- Functional Tests:
+  - [Test Name 1]: [Results and findings]
+  - [Test Name 2]: [Results and findings]
+  - [Document all functional test results]
+
+[ED Course]
+- Medications and Treatments Administered (Chronological or by priority):
+  - [Medication 1] [Dose]: [Route, time, purpose]
+  - [Medication 2] [Dose]: [Route, time, purpose]
+  - [Treatment 1]: [Detailed treatment description, time]
+  - [Document all medication and treatment history]
+
+- Clinical Progress:
+  - [Time 1]: [Symptom changes, vital sign changes]
+  - [Time 2]: [Additional treatment or assessment]
+  - [Major events during hospitalization]
+
+[Consultation]
+- [Department] Consultation: [Reason for consultation and findings]
+- [If not applicable, indicate 'None']
+
+[Diagnosis]
+- Primary Diagnosis: [Diagnosis] (ICD code)
+- Secondary Diagnoses:
+  - [Diagnosis 1] (ICD code)
+  - [Diagnosis 2] (ICD code)
+  - [List all secondary diagnoses]
+
+[Disposition]
+- Discharge Information: [Discharge/Admission/Transfer/Death, etc.]
+- Discharge Rationale: [Detailed explanation of improved condition, need for additional treatment, etc.]
+- Post-Discharge Plan: [Follow-up appointments, medication prescriptions, precautions, etc.]
+- Patient and Family Education: [Educational content provided]
+
+---
+
+※ This Full Cycle Clinical Note comprehensively contains all medical information during the patient's entire emergency department stay.
