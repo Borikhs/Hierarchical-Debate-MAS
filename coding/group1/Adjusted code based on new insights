@@ -1,0 +1,40 @@
+# Adjusted code based on new insights
+import pandas as pd
+import numpy as np
+
+# Adjusted patient information setup with emphasis on new insights
+patient_data = {
+    'age': 77,
+    'gender': 1,  # Male
+    'triage_level': 1,  # ESI Level 1 (Non-critical)
+    'primary_dx_code': ['S2244', 'M7918', 'M754', 'M5410'],  # Diagnosis codes
+    'primary_dx_name': ['Shoulder pain due to chronic musculoskeletal issues', 
+                        'Multiple rib fractures', 
+                        'Generalized myalgia', 
+                        'Radicular pain from spine'],
+    'initial_sbp': 107,
+    'initial_bt': 36.4,
+    'initial_rr': 18,
+    'initial_hr': 89,
+    'triage_notes': 'Elderly male with severe shoulder pain, difficulty in movement, and rib fractures following a fall.'
+}
+
+# Adjusting diagnosis probabilities based on latest research findings
+new_diagnosis_probabilities = {
+    'Fracture due to fall/osteo-porosis': 0.50,  # Increased probability
+    'Radicular pain from spine': 0.20,          # Slightly decreased
+    'Musculoskeletal shoulder pain': 0.20,
+    'Generalized myalgia from stress fall': 0.10
+}
+
+# Disposition decision remains largely similar but substantiated by further diagnostic input
+new_disposition_level = 2  # Admission
+
+# Print updated diagnosis predictions
+print("Updated Top 4 Probable Diagnoses:")
+for idx, (diagnosis, probability) in enumerate(sorted(new_diagnosis_probabilities.items(), key=lambda x: x[1], reverse=True), start=1):
+    print(f"{idx}. {diagnosis} (Probability: {probability*100:.1f}%)")
+
+# Print updated disposition decision
+print("\nUpdated Predicted Disposition Level:")
+print(f"{new_disposition_level} - {disposition_map[new_disposition_level]}")

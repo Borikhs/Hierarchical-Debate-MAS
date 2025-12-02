@@ -36,7 +36,7 @@ class MultiAgentDebateSystem:
         enable_logging: bool = True,
         log_dir: Optional[Path] = None,
         retriever_name: str = "MedCPT",
-        corpus_name: str = "MedCorp",
+        corpus_name: str = "Textbooks", #Textbooks
         db_dir: str = "/data/multi-agent_snuh/MedRAG/corpus"
     ):
         """
@@ -65,19 +65,25 @@ class MultiAgentDebateSystem:
             )
 
         # Create model client
+        # self.model_client = OpenAIChatCompletionClient(
+        #     model=model_name,
+        #     api_key=self.api_key
+        # )
+
+        self.model_client = OllamaChatCompletionClient(
+        model="llama3.3",
+        host='http://localhost:11434',
+        model_info={
+           "vision": False,
+           "function_calling": True,
+           "json_output": True,
+           "family" : 'llama-3.3-70b'
+        })
+
         self.model_client = OpenAIChatCompletionClient(
             model=model_name,
             api_key=self.api_key
         )
-
-        # self.model_client = OllamaChatCompletionClient(
-        # model="llama3.3",
-        # model_info={
-        #    "vision": False,
-        #    "function_calling": True,
-        #    "json_output": True,
-        #    "family" : 'unknown'
-        # })
 
         # Initialize MedRAG retrieval system (shared across all groups)
         print(f"[MedRAG] Initializing retrieval system...")
@@ -88,8 +94,8 @@ class MultiAgentDebateSystem:
             retriever_name=retriever_name,
             corpus_name=corpus_name,
             db_dir=db_dir,
-            HNSW=False,  # Use exact search (more accurate)
-            cache=True  # Don't cache in memory (save RAM)
+            HNSW=False,  #
+            cache=False  #
         )
 
         print(f"[MedRAG] Retrieval system ready!\n")
@@ -163,56 +169,55 @@ class MultiAgentDebateSystem:
             "log_directory": self.logger.get_session_dir() if self.logger else None
         }
 
-    def cleanup(self):
-        """Clean up resources."""
-        self.phase1.cleanup()
+
 
 
 async def main():
     """Example usage of the multi-agent debate system."""
 
     task ="""
-    Using the patient information below, independently predict the patient's Diagnosis and Disposition.
+## GOAL : Using the patient information provided below, predict:
+
+1. The top 4 most likely diagnoses for this patient, based on the clinical presentation, physical examination, and medical history.
+2. The disposition level, selecting one of the following:
+   - 0 = Discharge
+   - 1 = Ward Admission
+   - 2 = ICU Admission
     
-Patient's information:
+## Patient's information:
 [Basic Information]
-- **Age**: 78 years old
-- **Gender**: Female
-- **Arrival Time**: Admitted at 13:45
-- **Arrival Method**: Brought directly to our Emergency Department (AER)
+- Age: 77 years old
+- Gender: Male
+- Arrival Time: Admitted at 10:10 AM
+- Arrival Method: Brought directly to our Emergency Department (AER)
+- ESI Level: ESI Level 1 (Non-critical)
 
 [Clinical Presentation]
-- **Chief Complaint**: Patient presented with severe shoulder pain characterized by significant limitation in shoulder movement, particularly exacerbated by arm elevation, accompanied by multiple rib fractures and generalized muscle aches.
-- **Reason for Visit**: Acute onset symptoms following a fall suspected to have resulted in multiple rib fractures and exacerbated pre-existing conditions including shoulder impingement syndrome and radiculopathy.
-- **Vital Signs**:
-  - **Temperature**: 36.5°C
-  - **Respiratory Rate**: 18 breaths per minute
-  - **Heart Rate**: 89 beats per minute
-- **ESI Level**: ESI Level 1 (Non-critical)
+- Chief Complaint: The patient presented with severe shoulder pain and difficulty in shoulder movement, particularly exacerbated by arm elevation, along with multiple rib fractures and generalized muscle aches. The symptoms are believed to have arisen following a fall.
+- Reason for Visit: Acute onset symptoms following a fall, likely resulting in multiple rib fractures and aggravating pre-existing conditions such as chronic musculoskeletal issues.
+- Vital Signs:
+  - Temperature: 36.4°C
+  - Respiratory Rate: 18 breaths per minute
+  - Heart Rate: 89 beats per minute
+  - Blood Pressure: 107/xx mmHg (invasive measurement not provided)
 
 [Physical Examination]
-- **General**: Alert and oriented, mildly diaphoretic due to pain.
-- **Musculoskeletal**: 
-  - Significant tenderness over the affected shoulder area indicative of impingement syndrome (S22440).
-  - Multiple tender points noted across the rib cage consistent with multiple rib fractures (M79180).
-  - Generalized myalgia (M754) observed throughout the musculature.
-- **Neurological**: Mild discomfort reported in the upper extremity suggestive of radiculopathy (M5410), potentially involving multiple spinal levels.
+- General: Alert and oriented with mild diaphoresis due to pain.
+- Musculoskeletal: Significant tenderness over the affected shoulder area with marked limitation of range of motion, suggestive of chronic musculoskeletal issues (S2244). Multiple tender points noted over the rib cage consistent with multiple rib fractures (M7918). Generalized myalgia (M754) noted throughout the musculature.
+- Neurological: Mild discomfort reported in the upper extremity, indicative of possible radicular pain (M5410), likely involving multiple spinal levels.
 
-[Medical History]
-- **Past Medical History**: 
+[Related Medical History]
+- Past Medical History:
   - Parkinson’s Disease (G20)
-  - History of multiple minor falls increasing the risk for fractures
-- **Current Medications**: Information not provided
-- **Allergies**: Information not provided
+  - History of multiple minor falls increasing risk for fractures
 
 [Initial Lab Results]
-- **Summary of Diagnostic Tests**: No specific lab results, imaging, or functional tests noted at this time.
+- Summary of Diagnostic Tests: No specific lab results, imaging, or functional tests noted at the time of presentation.
 
-[Initial Assessment and Plan]
-- **Medications and Treatments Administered**: 
-  - Administration of analgesics (e.g., NSAIDs or acetaminophen) for pain management.
-  - Referral planned for further imaging (e.g., X-rays) to confirm rib fractures and assess spinal involvement.
-  - Consideration for orthopedic consultation for comprehensive evaluation and potential management of shoulder impingement syndrome and radiculopathy.
+[ED Course]
+- Medications and Treatments Administered:
+  - Analgesics (e.g., NSAIDs or acetaminophen) for pain management
+  - Plan for further evaluation and potential referral for orthopedic consultation and imaging studies as needed for comprehensive management of rib fractures and musculoskeletal pain.
     """
 
     # Create system
@@ -226,11 +231,8 @@ Patient's information:
         print("\n[System] Debate complete!")
         print(f"[System] Phase 1: {len(result['phase1_reports'])} group reports generated")
         print(f"[System] Phase 2: Consensus reached = {result['phase2_debate'].consensus_reached}")
-
-    finally:
-        # Cleanup
-        system.cleanup()
-
+    except:
+        pass
 
 if __name__ == "__main__":
     # Run the async main function

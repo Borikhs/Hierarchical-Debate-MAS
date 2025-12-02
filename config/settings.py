@@ -22,11 +22,11 @@ MAX_GROUP_MESSAGES = 15  # Maximum messages per group in Phase 1
 MAX_DEBATE_ROUNDS = 10     # Maximum debate rounds in Phase 2
 
 # Termination keywords
-REPORT_READY_KEYWORD = "REPORT_READY"
-CONSENSUS_REACHED_KEYWORD = "CONSENSUS_REACHED"
+REPORT_READY_KEYWORD = "<REPORT_READY>"
+CONSENSUS_REACHED_KEYWORD = "<CONSENSUS_REACHED>"
 
 # Group names
-GROUP_NAMES = ["Group1", "Group2", "Group3"]
+GROUP_NAMES = ["Group1", "Group2"]
 
 # Code execution settings
 CODE_EXECUTION_TIMEOUT = 60  # seconds

@@ -5,7 +5,7 @@ from typing import List, Optional
 from dataclasses import dataclass
 
 from autogen_agentchat.agents import AssistantAgent
-from autogen_agentchat.teams import SelectorGroupChat
+from autogen_agentchat.teams import SelectorGroupChat, RoundRobinGroupChat
 from autogen_agentchat.conditions import TextMentionTermination, MaxMessageTermination
 from autogen_ext.models.openai import OpenAIChatCompletionClient
 
@@ -116,25 +116,6 @@ Be fair, objective, and focus on finding the correct answer to the ORIGINAL TASK
 """
         )
 
-    def _get_selector_prompt(self) -> str:
-        """Get the selector prompt for the debate."""
-        return """Select the next speaker in this multi-leader debate.
-
-Available participants:
-{roles}
-
-Conversation history:
-{history}
-
-Selection rules:
-1. Early rounds: Let each leader present their findings (round-robin style)
-2. Middle rounds: Facilitate debate between leaders who disagree
-3. Late rounds: Have ConsensusManager synthesize when convergence appears
-4. If leaders are repeating points: Select ConsensusManager to conclude
-
-Select from: {participants}
-"""
-
     async def run_debate(self, group_reports: List[GroupReport], original_task: str) -> DebateResult:
         """
         Run the leader debate to reach consensus.
@@ -159,11 +140,8 @@ Select from: {participants}
         # Create consensus manager with original task
         consensus_manager = self._create_consensus_manager(original_task)
 
-        # Create debate team
-        debate_team = SelectorGroupChat(
+        debate_team = RoundRobinGroupChat(
             participants=[*leaders, consensus_manager],
-            model_client=self.model_client,
-            selector_prompt=self._get_selector_prompt(),
             termination_condition=(
                 TextMentionTermination(CONSENSUS_REACHED_KEYWORD) |
                 MaxMessageTermination(MAX_DEBATE_ROUNDS * len(leaders) + 5)
