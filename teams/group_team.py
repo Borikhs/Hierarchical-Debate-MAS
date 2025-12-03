@@ -2,10 +2,11 @@
 GroupTeam: A team of 5 agents working together.
 """
 from pathlib import Path
+import shutil
 from typing import Optional, Annotated
 
-from autogen.coding import LocalCommandLineCodeExecutor, CodeBlock
-from autogen_agentchat.agents import AssistantAgent
+from autogen_ext.code_executors.docker import DockerCommandLineCodeExecutor
+from autogen_agentchat.agents import AssistantAgent, CodeExecutorAgent
 from autogen_agentchat.teams import SelectorGroupChat, RoundRobinGroupChat
 from autogen_agentchat.conditions import TextMentionTermination, MaxMessageTermination
 from autogen_ext.models.openai import OpenAIChatCompletionClient
@@ -42,6 +43,27 @@ class GroupTeam:
         # Create isolated work directory for this group
         self.group_work_dir = work_dir / group_name.lower()
         self.group_work_dir.mkdir(parents=True, exist_ok=True)
+
+        # -------------------------
+        #  Copy patient_data.csv
+        # -------------------------
+        project_root = Path(__file__).resolve().parent.parent  # 프로젝트 루트
+        source_csv = project_root / "data" / "patient_data.csv"
+        target_csv = self.group_work_dir / "patient_data.csv"
+
+        # 실제 파일 복사
+        shutil.copy(source_csv, target_csv)
+
+        # 삭제할 파일 목록으로 관리
+        self.files_to_cleanup = [target_csv]
+
+        # Create the executor instance
+        self.executor_instance = DockerCommandLineCodeExecutor(
+            image="my-python-ml:latest",
+            work_dir=self.group_work_dir,
+            timeout=CODE_EXECUTION_TIMEOUT,
+            stop_container=False
+        )
 
         # Create MedRAG search tool with shared retrieval system
         if self.retrieval_system is not None:
@@ -141,39 +163,6 @@ Output Guidelines:
 - Cite sources clearly when possible (e.g., "Source: Harrison, DocID 1234")
 """
         )
-
-
-        # 3. Code Executor: Executes code using a tool
-        # Create the executor instance
-        self.executor_instance = LocalCommandLineCodeExecutor(
-            work_dir=self.group_work_dir,
-            timeout=CODE_EXECUTION_TIMEOUT
-        )
-
-        # Create a tool function that wraps the executor
-        def execute_python_code(
-            code: Annotated[str, "Python code to execute"]
-        ) -> Annotated[str, "Execution result including output and exit code"]:
-            """
-            Execute Python code and return the result.
-
-            Args:
-                code: Python code to execute
-
-            Returns:
-                Execution result with exit code and output
-            """
-            try:
-                result = self.executor_instance.execute_code_blocks(
-                    code_blocks=[CodeBlock(language="python", code=code)]
-                )
-                output = f"Exit code: {result.exit_code}\n"
-                output += f"Output:\n{result.output}\n"
-                if result.code_file:
-                    output += f"Code saved to: {result.code_file}"
-                return output
-            except Exception as e:
-                return f"Error executing code: {str(e)}"
 
 
         # 2. Code Writer: LLM-based agent that writes code
@@ -296,34 +285,12 @@ for intervention in interventions:
 ```
 """
         )
-
-
-        # Code Executor agent with tool
-        self.code_executor = AssistantAgent(
+        self.code_executor = CodeExecutorAgent(
             name=f"{self.group_name}CodeExecutor",
             description="Executes Python code for medical data analysis and returns results",
-            model_client=self.model_client,
-            tools=[execute_python_code],
-            system_message="""You are a code execution specialist.
-Your role:
-1. When you receive Python code, execute it using the execute_python_code tool
-2. Extract code from markdown code blocks if needed
-3. Return the execution results clearly
-4. Report any errors that occur
-
-NOTE: The file 'patient_data.csv' already exists in the working directory
-
-You DO NOT write code - you only execute code provided by CodeWriter.
-
-When you see code like:
-```python
-print("hello")
-```
-
-Extract the code and call: execute_python_code(code='print("hello")')
-Then report the results."""
+            code_executor=self.executor_instance,
+            sources=[f"{self.group_name}CodeWriter"]
         )
-
 
         # 5. Analyst: Interprets results and validates solutions
         self.analyst = AssistantAgent(
@@ -373,7 +340,28 @@ Guidelines:
 )
 
     async def run(self, task: str):
+        try:
+            if not self.executor_instance._running:
+                await self.executor_instance.start()
+        except Exception as e:
+            print("[ERROR] Failed to start Docker executor:", e)
+            return None
+
         result = await self.team.run(task=task)
+        try:
+            await self.executor_instance.stop()
+        except RuntimeError as e:
+            if "Executor shutdown has been called" in str(e):
+                pass
+            else:
+                raise
+        finally:
+            for f in getattr(self, "files_to_cleanup", []):
+                try:
+                    f.unlink()
+                except FileNotFoundError:
+                    pass
+
         return result
 
     async def run_stream(self, task: str):

@@ -14,7 +14,7 @@ from autogen_ext.models.openai import OpenAIChatCompletionClient
 from autogen_ext.models.ollama import OllamaChatCompletionClient
 
 from orchestration import Phase1Orchestrator, Phase2DebateOrchestrator
-from config import MODEL_NAME, API_KEY, CODING_DIR
+from config import MODEL_NAME, API_KEY
 from utils import TranscriptLogger
 from tools import RetrievalSystem
 
@@ -32,8 +32,7 @@ class MultiAgentDebateSystem:
         self,
         model_name: str = MODEL_NAME,
         api_key: Optional[str] = None,
-        work_dir: Path = CODING_DIR,
-        enable_logging: bool = True,
+        #work_dir: Path = CODING_DIR,
         log_dir: Optional[Path] = None,
         retriever_name: str = "MedCPT",
         corpus_name: str = "Textbooks", #Textbooks
@@ -80,11 +79,6 @@ class MultiAgentDebateSystem:
            "family" : 'llama-3.3-70b'
         })
 
-        self.model_client = OpenAIChatCompletionClient(
-            model=model_name,
-            api_key=self.api_key
-        )
-
         # Initialize MedRAG retrieval system (shared across all groups)
         print(f"[MedRAG] Initializing retrieval system...")
         print(f"[MedRAG] Retriever: {retriever_name}, Corpus: {corpus_name}")
@@ -102,10 +96,15 @@ class MultiAgentDebateSystem:
 
         # Create transcript logger
         self.logger = None
+        enable_logging = True
         if enable_logging:
             self.logger = TranscriptLogger(output_dir=log_dir)
             print(f"[LOG] Transcript logging enabled")
             print(f"[LOG] Session directory: {self.logger.get_session_dir()}\n")
+            coding_dir = self.logger.get_session_dir() / "coding"
+            coding_dir.mkdir(parents=True, exist_ok=True)
+            work_dir = coding_dir
+            print(f"[WORKDIR] Created coding work directory: {work_dir}")
 
         # Create orchestrators (pass retrieval system to Phase1)
         self.phase1 = Phase1Orchestrator(
